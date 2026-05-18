@@ -13,13 +13,30 @@
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen">
 
-    <!-- Screen Sync Loader overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-slate-900/90 z-50 flex flex-col justify-center items-center text-white p-4">
-        <div class="w-16 h-16 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <h3 class="text-xl font-bold tracking-wide">กำลังเชื่อมต่อข้อมูลกับ Google Sheets...</h3>
-        <p class="text-xs text-slate-400 mt-2 text-center max-w-sm">
+    <!-- Screen Sync Loader & Connection Diagnostics Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-slate-900/95 z-50 flex flex-col justify-center items-center text-white p-6 transition-all duration-300">
+        <div id="loader-spinner" class="w-16 h-16 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <h3 id="loader-title" class="text-xl font-bold tracking-wide">กำลังเชื่อมต่อข้อมูลกับ Google Sheets...</h3>
+        <p id="loader-desc" class="text-xs text-slate-400 mt-2 text-center max-w-md">
             ระบบกำลังตรวจสอบและดึงสถานะสต๊อกล่าสุดจากคลังออนไลน์ หากยังไม่มีชีตระบบจะดัดแปลงหัวข้อตารางให้อัตโนมัติในครั้งแรก
         </p>
+        
+        <!-- Diagnostic Warning Box (Visible when connection fails) -->
+        <div id="loader-error-actions" class="hidden mt-6 flex flex-col items-center gap-4 bg-slate-800 p-6 rounded-xl border border-rose-500/30 max-w-lg">
+            <span class="text-rose-400 text-lg font-bold flex items-center gap-2">⚠️ การเชื่อมต่อฐานข้อมูลล้มเหลว</span>
+            <p class="text-xs text-slate-300 text-center leading-relaxed">
+                ระบบไม่สามารถดึงข้อมูลจริงจาก Google Sheets ได้ และเราได้ถอดข้อมูลจำลองออกแล้ว เพื่อป้องกันข้อผิดพลาด กรุณาดำเนินการแก้ไขดังนี้:
+            </p>
+            <ul class="text-[11px] text-slate-400 list-decimal list-inside space-y-1.5 self-start font-sans">
+                <li>เปิดไฟล์ <code class="bg-slate-950 px-1 py-0.5 rounded text-rose-300">index.html</code> นำลิงก์ Web App URL มาอัปเดตในตัวแปร <code class="bg-slate-950 px-1 py-0.5 rounded text-rose-300">BACKEND_WEBAPP_URL</code> ที่บรรทัดแรกของสคริปต์</li>
+                <li>ตรวจสอบว่าใน Google Sheets ได้กด <strong class="text-slate-200">"Deploy (ทำให้ใช้งานได้)"</strong> เป็น <strong class="text-slate-200">"Web App"</strong> และระบุสิทธิ์เป็น <strong class="text-slate-200">"Everyone (ทุกคน)"</strong> แล้ว</li>
+                <li>ลองอัปเกรด Deploy ในหน้า Apps Script ให้เป็น เวอร์ชันใหม่ (New Version) เสมอหลังแก้โค้ดหลังบ้าน</li>
+            </ul>
+            <div class="flex gap-3 mt-2">
+                <button onclick="fetchRealTimeData()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded text-xs transition cursor-pointer">🔄 ลองเชื่อมต่อใหม่อีกครั้ง</button>
+                <button onclick="bypassConnection()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold px-4 py-2 rounded text-xs transition cursor-pointer">🔓 ทำงานแบบออฟไลน์ (ดูโครงสร้าง)</button>
+            </div>
+        </div>
     </div>
 
     <!-- Top Navigation Bar -->
@@ -27,7 +44,10 @@
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3">
                 <span class="text-xl font-bold tracking-wider text-emerald-400">RECYCLE</span>
-                <span class="text-sm bg-slate-800 px-2 py-1 rounded text-slate-400 border border-slate-700">Phase 1</span>
+                <span id="conn-status-badge" class="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 transition-all">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                    ยังไม่ได้เชื่อมต่อ Google Sheets
+                </span>
             </div>
             <!-- Role Switchers -->
             <nav class="flex space-x-1 mt-2 sm:mt-0 bg-slate-800 p-1 rounded-lg border border-slate-700" id="role-nav">
@@ -229,7 +249,7 @@
                         <div>🪵 <strong>อลูมิเนียม:</strong> วางบนพาเลทไม้ (ล็อคสถานะ In-Use 1 ตัว)</div>
                     </div>
 
-                    <button onclick="handleProcessLot()" class="w-full bg-amber-600 text-white font-medium py-3 rounded-lg hover:bg-amber-500 transition shadow-xs cursor-pointer">
+                    <button onclick="handleProcessLot()" class="w-full bg-amber-600 text-white font-medium py-3 rounded-lg hover:bg-amber-500 transition shadow-xs cursor-pointer font-bold">
                         🔒 ปิดล็อต & สั่งพิมพ์สลิปความร้อน (Thermal Tag 80x80)
                     </button>
                 </div>
@@ -357,8 +377,8 @@
     <!-- CENTRAL LOGIC ENGINE (JAVASCRIPT STATE) -->
     <script>
         // --- 1. Global EndPoint Settings & Clean Local Memory Storage ---
-        // ใส่ API URL เว็บแอปของท่านในตัวแปรนี้
-        const BACKEND_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzxQ1wvqJ38gwh8TYNLECyI1Cdi1pAtd7jYuanRfkLgoAtSSq19mkrQLXitHfGDCy2aAA/exec";
+        // วางลิงก์ Web App URL ที่ลงท้ายด้วย /exec ตรงช่องตัวแปรนี้
+        const BACKEND_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzDq2wQF6gMaamODACcLcxEb0L-4gCulVtQVm34lui-X3vIxCoU_19lgQhfNBREdPq0zg/exec";
 
         const AppState = {
             skuNames: {
@@ -368,7 +388,7 @@
                 al_thin: "อลูมิเนียมบาง",
                 al_can: "อลูมิเนียมกระป๋อง"
             },
-            // เริ่มต้นที่ 0 ทั้งหมด เพื่อซิงก์ตรงจาก Google Sheets เสมอ
+            // เริ่มต้นที่ 0 เสมอ เพื่อบังคับซิงก์ดึงค่าจริงจาก Google Sheet เท่านั้น! (ไม่ใช้ยอดจำลอง)
             rawStock: { cu_a: 0, cu_b: 0, al_thick: 0, al_thin: 0, al_can: 0 },
             packedLots: [],
             assets: {
@@ -383,34 +403,98 @@
             lossLogs: []
         };
 
-        // เริ่มซิงก์ข้อมูลทันทีที่เปิดเว็บแอปพลิเคชัน
+        // เริ่มซิงก์ข้อมูลทันทีเมื่อเปิดใช้งานหน้าจอ
         window.addEventListener('DOMContentLoaded', () => {
             fetchRealTimeData();
         });
 
-        // --- 2. Real-time Sync Data Engine from Google Sheet ---
+        // --- 2. Real-time Sync Data Engine from Google Sheet (With JSONP Fallback) ---
         function fetchRealTimeData() {
             document.getElementById('loading-overlay').classList.remove('hidden');
+            document.getElementById('loader-spinner').classList.remove('hidden');
+            document.getElementById('loader-desc').classList.remove('hidden');
+            document.getElementById('loader-error-actions').classList.add('hidden');
+            document.getElementById('loader-title').innerText = "กำลังเชื่อมต่อข้อมูลกับ Google Sheets...";
             
+            // 2.1 ลองใช้ Fetch API ปกติก่อน
             fetch(BACKEND_WEBAPP_URL + "?action=readAll")
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error("CORS or Fetch restriction detected.");
+                return res.json();
+            })
             .then(data => {
-                if (data.status === "success") {
-                    if (data.rawStock) AppState.rawStock = data.rawStock;
-                    if (data.packedLots) AppState.packedLots = data.packedLots;
-                    if (data.lossLogs) AppState.lossLogs = data.lossLogs;
-                    if (data.assets) AppState.assets = data.assets;
-                    
-                    showToast("🔄 ซิงค์ฐานข้อมูลจริงจาก Google Sheets เรียบร้อย!");
-                    renderAllViews();
-                }
-                document.getElementById('loading-overlay').classList.add('hidden');
+                handleSuccessfulSync(data);
             })
             .catch(err => {
-                console.warn("การดึงข้อมูลผิดพลาดหรืออยู่ระหว่างเชื่อมต่อ ระบบทำงานในโหมดออฟไลน์ทดลองใช้ชั่วคราว");
-                document.getElementById('loading-overlay').classList.add('hidden');
-                renderAllViews();
+                console.warn("การดึงข้อมูลแบบ Fetch ถูกบล็อกเนื่องจากนโยบายเบราว์เซอร์ กำลังลองใช้วิธี JSONP สำรอง...", err);
+                
+                // 2.2 ใช้ระบบ JSONP Fallback เพื่อข้ามผ่านบล็อก CORS ของ Iframe Sandbox
+                const callbackName = 'jsonpCallback_' + Math.round(100000 * Math.random());
+                
+                // ตั้งค่า Timeout ป้องกันคิวค้าง (5 วินาที)
+                const timeoutId = setTimeout(() => {
+                    console.error("JSONP Connection Timed Out.");
+                    showConnectionError();
+                    cleanup();
+                }, 5000);
+
+                window[callbackName] = function(data) {
+                    clearTimeout(timeoutId);
+                    handleSuccessfulSync(data);
+                    cleanup();
+                };
+                
+                const script = document.createElement('script');
+                script.src = BACKEND_WEBAPP_URL + "?action=readAll&callback=" + callbackName;
+                script.onerror = function() {
+                    clearTimeout(timeoutId);
+                    console.error("การโหลดข้อมูลผ่าน JSONP ล้มเหลว");
+                    showConnectionError();
+                    cleanup();
+                };
+                
+                document.body.appendChild(script);
+                
+                function cleanup() {
+                    if (script && script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    delete window[callbackName];
+                }
             });
+        }
+
+        // จัดแจงข้อมูลเรียลไทม์ที่ได้รับกลับมาลงสเตทของแอป
+        function handleSuccessfulSync(data) {
+            if (data.status === "success") {
+                if (data.rawStock) AppState.rawStock = data.rawStock;
+                if (data.packedLots) AppState.packedLots = data.packedLots;
+                if (data.lossLogs) AppState.lossLogs = data.lossLogs;
+                if (data.assets) AppState.assets = data.assets;
+                
+                const badge = document.getElementById('conn-status-badge');
+                badge.className = "text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 transition-all";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> เชื่อมต่อฐานข้อมูลชีตแล้ว`;
+
+                showToast("🔄 ดึงยอดคลังสินค้าจริงจาก Google Sheets แล้ว!");
+                renderAllViews();
+            }
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        // แสดงผลหน้ากล่องแจ้งเตือนความผิดพลาด
+        function showConnectionError() {
+            document.getElementById('loader-spinner').classList.add('hidden');
+            document.getElementById('loader-desc').classList.add('hidden');
+            document.getElementById('loader-title').innerText = "❌ ตรวจพบปัญหาการดึงข้อมูล";
+            document.getElementById('loader-error-actions').classList.remove('hidden');
+        }
+
+        // อนุญาตให้ทดสอบโครงสร้าง UI ชั่วคราวโดยไม่เปิดสิทธิ์ Google Sheets
+        function bypassConnection() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+            showToast("⚠️ โหมดทดสอบออฟไลน์ (ยังไม่ได้ดึงยอดจากชีตจริง)");
+            renderAllViews();
         }
 
         // --- 3. Controller Routing System ---
@@ -437,15 +521,6 @@
             renderAllViews();
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast-msg');
-            toast.innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
         // --- 4. Render Engine ---
         function renderAllViews() {
             // A. Render Office Lots Table
@@ -454,7 +529,7 @@
             
             const availableLots = AppState.packedLots.filter(l => l.status === 'Available');
             if(availableLots.length === 0) {
-                officeTable.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400 italic">ไม่มีล็อตสินค้าค้างคลัง (รอโฟร์แมนปิดล็อตหน้าลาน)</td></tr>`;
+                officeTable.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400 italic">ไม่มีข้อมูลล็อตสินค้าค้างคลัง (รอการดึงข้อมูลจากชีตจริง)</td></tr>`;
             } else {
                 availableLots.forEach(lot => {
                     const tr = document.createElement('tr');
@@ -606,7 +681,7 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                showToast(`🚚 ตัดยอดคลัง Tear & Scan สินค้าขึ้นรถและลง Sheet เรียบร้อย`);
+                showToast("🚚 สแกนตัดยอดคลังสินค้า และปรับสถานะพาเลทลงชีตจริงสำเร็จ!");
             })
             .catch(err => console.error("Dispatch Connection Error:", err));
 
@@ -640,7 +715,7 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                showToast(`🔄 บันทึกคืนพาเลทหมุนเวียนจำนวน +${qty} ชุด บนชีตเรียบร้อย`);
+                showToast(`🔄 บันทึกรับคืนพาเลทเข้าคลังสำเร็จ (บันทึกบน Google Sheet เรียบร้อย)`);
             })
             .catch(err => console.error("Return Asset Error:", err));
 
@@ -756,7 +831,7 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                showToast(`⚙️ ปิดล็อต จัดเตรียมแท็ก และซิงก์ข้อมูลไปที่ฐานข้อมูลออนไลน์แล้ว`);
+                showToast("⚙️ ปิดล็อตและจัดทำ Lot บาร์โค้ด บันทึกลงตารางชีตสำเร็จ!");
             })
             .catch(err => console.error("Processing Connection Failure:", err));
 
