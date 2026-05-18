@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recycle Asset Management System (Phase 1)</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
@@ -13,14 +12,12 @@
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen">
 
-    <!-- Top Navigation Bar -->
     <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3">
                 <span class="text-xl font-bold tracking-wider text-emerald-400">RECYCLE</span>
                 <span class="text-sm bg-slate-800 px-2 py-1 rounded text-slate-400 border border-slate-700">Phase 1</span>
             </div>
-            <!-- Role Switchers -->
             <nav class="flex space-x-1 mt-2 sm:mt-0 bg-slate-800 p-1 rounded-lg border border-slate-700" id="role-nav">
                 <button onclick="switchRole('office')" id="btn-office" class="px-4 py-1.5 rounded-md font-medium text-sm transition-all bg-emerald-500 text-white shadow">
                     💻 Office / Admin
@@ -37,7 +34,6 @@
 
     <main class="max-w-7xl mx-auto px-4 py-6">
         
-        <!-- SECTION 1: OFFICE VIEW -->
         <section id="view-office" class="space-y-6">
             <div class="border-l-4 border-emerald-500 pl-3">
                 <h2 class="text-2xl font-bold text-slate-800">ฝ่ายสำนักงาน (Office / Admin Panel)</h2>
@@ -45,7 +41,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Daily Input Form -->
                 <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100">
                     <h3 class="text-lg font-semibold text-slate-700 mb-4 flex items-center gap-2">
                         📥 1. บันทึกสรุปยอดรับซื้อประจำวัน (Daily Summary Input)
@@ -71,7 +66,6 @@
                     </form>
                 </div>
 
-                <!-- Dispatch Code Scan Form -->
                 <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100">
                     <h3 class="text-lg font-semibold text-slate-700 mb-4 flex items-center gap-2">
                         🚚 2. สแกนตัดจ่ายส่งออก (Outbound Dispatch - Tear & Scan)
@@ -93,7 +87,6 @@
                 </div>
             </div>
 
-            <!-- Ready to Ship Stock Table -->
             <div class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
                 <div class="p-4 bg-slate-50 border-b border-gray-100 flex justify-between items-center">
                     <h3 class="font-semibold text-slate-700">📦 รายการสินค้าที่แพ็คเสร็จในคลัง (คุมแท็กรายชิ้น / บิ๊กแบ็ก / พาเลท)</h3>
@@ -112,13 +105,11 @@
                             </tr>
                         </thead>
                         <tbody id="office-lots-table" class="divide-y divide-gray-100 text-sm">
-                            <!-- JS Dynamic Content -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Asset Control Room -->
             <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100">
                 <h3 class="text-lg font-semibold text-slate-700 mb-4">💼 อาณาจักรสินทรัพย์หมุนเวียน (Asset Tracking Room)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -137,7 +128,6 @@
                     </div>
                 </div>
 
-                <!-- Return Pallet Form -->
                 <div class="bg-slate-50 p-4 rounded-lg border border-gray-200">
                     <h4 class="text-sm font-semibold text-slate-700 mb-2">🔄 รับคืนพาเลทหมุนเวียนจากโรงงานลูกค้า</h4>
                     <div class="flex flex-wrap gap-3 items-end">
@@ -160,26 +150,22 @@
             </div>
         </section>
 
-        <!-- SECTION 2: YARD VIEW -->
         <section id="view-yard" class="hidden space-y-6">
             <div class="border-l-4 border-amber-500 pl-3">
                 <h2 class="text-2xl font-bold text-slate-800">หน้าลาน / โฟร์แมน (Yard / Foreman Panel)</h2>
                 <p class="text-sm text-gray-500">ดึงยอดค้างลานมาคัดแยก บรรจุ ชั่งน้ำหนักจริง และสั่งพิมพ์แท็กสลิปกันน้ำความร้อน</p>
             </div>
 
-            <!-- Pending Pool Alert Card -->
             <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h3 class="font-semibold text-amber-900 flex items-center gap-2">⚠️ กองโลหะดิบค้างลานรอแปรรูปบรรจุถุง</h3>
                     <p class="text-xs text-amber-700 mt-1">โฟร์แมนต้องเลือกยอดเหล่านี้ไปผ่านเครื่องร่อน คัดแยก ขจัดขยะ และบรรจุ Lot</p>
                 </div>
                 <div class="flex gap-4 text-sm" id="yard-pending-pool">
-                    <!-- Dynamic rendering of pending raw items -->
-                </div>
+                    </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Action Packing Form -->
                 <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100 lg:col-span-2 space-y-4">
                     <h3 class="text-lg font-semibold text-slate-700 flex items-center gap-2">⚙️ บรรจุลงบรรจุภัณฑ์และปิด Lot สินค้า</h3>
                     
@@ -222,7 +208,6 @@
                     </button>
                 </div>
 
-                <!-- Simulated Thermal Printer Box -->
                 <div class="bg-gray-800 text-gray-200 p-4 rounded-xl shadow-lg border border-gray-700 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center pb-2 border-b border-gray-700 mb-4">
@@ -230,7 +215,6 @@
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                         </div>
                         
-                        <!-- Slip Template Content -->
                         <div id="thermal-tag-preview" class="bg-white text-black p-4 rounded shadow font-mono text-xs space-y-2 hidden mx-auto max-w-[240px]">
                             <div class="text-center font-bold border-b border-dashed border-gray-400 pb-1 text-sm">RECYCLE TAG</div>
                             <div class="bg-black text-white text-center py-2 font-bold my-1 text-lg" id="tag-fallback-grade">COPPER - A</div>
@@ -240,7 +224,6 @@
                             <div><strong>WEIGHT:</strong> <span id="tag-weight">0.00</span> KG</div>
                             <div><strong>ASSET:</strong> <span id="tag-asset">Big Bag</span></div>
                             <div class="border-b border-dashed border-gray-400 my-1"></div>
-                            <!-- Mock QR Code Box -->
                             <div class="w-24 h-24 bg-gray-200 mx-auto my-2 flex flex-col items-center justify-center text-[9px] border border-gray-400 text-center p-1">
                                 <span>[ QR CODE ]</span>
                                 <span class="text-[7px] text-gray-500 mt-1" id="tag-qr-id">LOT-XXXX</span>
@@ -258,14 +241,12 @@
             </div>
         </section>
 
-        <!-- SECTION 3: OWNER DASHBOARD -->
         <section id="view-owner" class="hidden space-y-6">
             <div class="border-l-4 border-slate-900 pl-3">
                 <h2 class="text-2xl font-bold text-slate-800">ผู้บริหาร / เจ้าของกิจการ (Owner Dashboard)</h2>
                 <p class="text-sm text-gray-500">ติดตามวิเคราะห์จุดทุจริต อัตราความเร็วในการทำงานหน้าลาน และมูลค่าทรัพยากรหมุนเวียน</p>
             </div>
 
-            <!-- Executive KPI Row -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div class="bg-white p-5 rounded-xl shadow-xs border border-rose-100 bg-linear-to-br from-white to-rose-50/20">
                     <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Floor Alert (ยอดค้างลานรอแปรสภาพ)</span>
@@ -289,7 +270,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Audit Loss Log Table -->
                 <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100 space-y-4">
                     <h3 class="font-bold text-slate-700 flex items-center gap-2 text-base text-rose-600">
                         🔍 บันทึกประวัติส่วนต่างน้ำหนักแปรรูป (Loss Audit Logs)
@@ -305,13 +285,11 @@
                                 </tr>
                             </thead>
                             <tbody id="owner-loss-table" class="divide-y divide-gray-100 text-gray-700">
-                                <!-- JS Dynamic Injection -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Finished Dispatch Logs -->
                 <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100 space-y-4">
                     <h3 class="font-bold text-slate-700 flex items-center gap-2 text-base text-emerald-600">
                         📈 ประวัติการตัดจ่ายรถส่งออกสำเร็จ (Shipped Records)
@@ -327,8 +305,7 @@
                                 </tr>
                             </thead>
                             <tbody id="owner-shipped-table" class="divide-y divide-gray-100 text-gray-600">
-                                <!-- JS Dynamic Injection -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -337,14 +314,14 @@
 
     </main>
 
-    <!-- Notification Toasts -->
     <div id="toast-msg" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-lg shadow-xl translate-y-20 opacity-0 transition-all duration-300 pointer-events-none text-sm z-50 flex items-center gap-2">
         <span>✅ บันทึกรายการสำเร็จ</span>
     </div>
 
-    <!-- CENTRAL LOGIC ENGINE (JAVASCRIPT STATE) -->
     <script>
-        // --- 1. Global Reactive Database Architecture ---
+        // --- 1. Global EndPoint Settings & Local Memory Storage ---
+        const BACKEND_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzDq2wQF6gMaamODACcLcxEb0L-4gCulVtQVm34lui-X3vIxCoU_19lgQhfNBREdPq0zg/exec";
+
         const AppState = {
             skuNames: {
                 cu_a: "ทองแดงปอกสวย (เกรด A)",
@@ -510,14 +487,39 @@
             }
         }
 
-        // --- 4. Logic Functions (Office Operations) ---
+        // --- 4. Logic Functions (Office Operations - Connected to Sheet) ---
         function handleDailyBuy(e) {
             e.preventDefault();
             const sku = document.getElementById('buy-sku').value;
             const w = parseFloat(document.getElementById('buy-weight').value);
+            const dateToday = new Date().toISOString().split('T')[0];
             
+            // Local Memory Update
             AppState.rawStock[sku] += w;
-            showToast(`📥 ยอดเข้าสู่กองดิบ: ค้างลานเพิ่ม +${w} kg`);
+            
+            // Preparing payload mapping directly to Tab 1: RawStock headers
+            const payload = {
+                action: "addRawStock",
+                date: dateToday,
+                skuCode: sku,
+                weightIn: w
+            };
+
+            // Post request to Google Sheet API
+            fetch(BACKEND_WEBAPP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                showToast(`📥 ซิงก์สำเร็จ! บันทึกยอดค้างลานไปที่ Google Sheets เรียบร้อยแล้ว`);
+            })
+            .catch(err => {
+                console.error("API Error:", err);
+                alert("❌ เกิดข้อผิดพลาดทางเทคนิคในการเชื่อมต่อฐานข้อมูลชีต");
+            });
+
             document.getElementById('daily-buy-form').reset();
             renderAllViews();
         }
@@ -532,22 +534,37 @@
         function executeDispatch(lotId) {
             const lot = AppState.packedLots.find(l => l.id === lotId && l.status === 'Available');
             if(!lot) {
-                alert("❌ ไม่พบ Lot ID นี้ หรือสินค้านี้ถูกสแกนส่งออกไปแล้ว");
+                alert("❌ ไม่พบ Lot ID นี้ หรือสินค้าชิ้นนี้ถูกส่งออกไปแล้ว");
                 return;
             }
 
-            // Execute Business Rule
+            // Payload structure mapping to Tab 5: DispatchLogs and updating Tab 2 status
+            const payload = {
+                action: "dispatchLot",
+                lotId: lotId
+            };
+
+            fetch(BACKEND_WEBAPP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                showToast(`🚚 ตัดจำหน่ายระบบ Tear & Scan และบันทึกลง Sheet สำเร็จ!`);
+            })
+            .catch(err => console.error("Dispatch Connection Error:", err));
+
+            // UI and Local State Adjustments
             lot.status = 'Shipped';
             if(lot.assetType === 'wood') {
                 AppState.assets.wood_in_use = Math.max(0, AppState.assets.wood_in_use - 1);
-                AppState.assets.wood_at_customer += 1; // ย้ายไปติดค้างยอดทวงที่ลูกค้า
+                AppState.assets.wood_at_customer += 1; 
             } else if (lot.assetType === 'plastic') {
                 AppState.assets.plastic_in_use = Math.max(0, AppState.assets.plastic_in_use - 1);
                 AppState.assets.plastic_at_customer += 1;
             }
-            // ถุงบิ๊กแบ็กตัดขาดไปตั้งแต่ลานบรรจุเรียบร้อยแล้ว
             
-            showToast(`🚚 สแกนตัดจ่ายสลิปสำเร็จ! สต๊อก Lot ${lotId} ตัดเป็น Shipped ยอดบรรจุภัณฑ์ย้ายไปค้างที่ลูกค้า`);
             renderAllViews();
         }
 
@@ -557,24 +574,24 @@
 
             if(type === 'wood') {
                 if(AppState.assets.wood_at_customer < qty) {
-                    alert("⚠️ ยอดคืนในเอกสาร เกินกว่ายอดสะสมค้างที่ลูกค้าส่งออกจริง!");
+                    alert("⚠️ ยอดคืนเกินกว่าจำนวนคงค้างสะสมที่ลูกค้ารับพาเลทไปจริง!");
                     return;
                 }
                 AppState.assets.wood_at_customer -= qty;
                 AppState.assets.wood_avail += qty;
             } else {
                 if(AppState.assets.plastic_at_customer < qty) {
-                    alert("⚠️ ยอดคืนในเอกสาร เกินกว่ายอดสะสมค้างที่ลูกค้าส่งออกจริง!");
+                    alert("⚠️ ยอดคืนเกินกว่าจำนวนคงค้างสะสมที่ลูกค้ารับพาเลทไปจริง!");
                     return;
                 }
                 AppState.assets.plastic_at_customer -= qty;
                 AppState.assets.plastic_avail += qty;
             }
-            showToast(`🔄 บันทึกคืนพาเลทเข้ากองพร้อมใช้งาน +${qty} ใบเรียบร้อย`);
+            showToast(`🔄 บันทึกคืนบรรจุภัณฑ์หมุนเวียนสำเร็จ +${qty} ใบ`);
             renderAllViews();
         }
 
-        // --- 5. Logic Functions (Yard Operations) ---
+        // --- 5. Logic Functions (Yard Operations - Connected to Sheet) ---
         function updatePendingIndicator() {
             const sku = document.getElementById('pack-sku').value;
             const currentRaw = AppState.rawStock[sku];
@@ -615,41 +632,65 @@
                 return;
             }
             if(packedWeight > currentRaw) {
-                alert("❌ น้ำหนักที่บรรจุ เกินกว่าน้ำหนักวัตถุดิบดิบที่มีค้างลาน กรุณาตรวจสอบยอดสรุปซื้อใหม่");
+                alert("❌ น้ำหนักบรรจุ เกินสต๊อกวัตถุดิบดิบค้างลาน กรุณาตรวจสอบอีกครั้ง");
                 return;
             }
 
             const loss = currentRaw - packedWeight;
             if(loss > 0 && !reason) {
-                alert("⚠️ มีส่วนต่างน้ำหนักลดลง ระบบบังคับให้บันทึกเหตุผลความสูญเสียเพื่อป้องกันทุจริต");
+                alert("⚠️ มีส่วนต่างน้ำหนักลดลง ระบบบังคับป้อนเหตุผลสำหรับบันทึกลงตาราง LossLogs");
                 return;
             }
 
-            // Asset Strategy Rule Assignment
-            let assetType = "wood"; // Default for Aluminum
+            // Asset Deployment Rules
+            let assetType = "wood"; 
             if(sku.startsWith('cu_')) {
                 assetType = "big_bag";
                 if(AppState.assets.big_bag_empty < 1) {
-                    alert("❌ ถุงบิ๊กแบ็กเปล่าในคลังไม่พอให้เบิกใช้งาน!");
+                    alert("❌ บิ๊กแบ็กว่างไม่เพียงพอสำหรับการแพ็คปิดล็อต!");
                     return;
                 }
-                AppState.assets.big_bag_empty -= 1; // ตัดจำหน่ายแบบ One-Way ทันที
+                AppState.assets.big_bag_empty -= 1; 
             } else {
                 if(AppState.assets.wood_avail < 1) {
-                    alert("❌ พาเลทไม้พร้อมใช้งานไม่เพียงพอ!");
+                    alert("❌ พาเลทไม้เปล่าหมดคลัง!");
                     return;
                 }
                 AppState.assets.wood_avail -= 1;
                 AppState.assets.wood_in_use += 1;
             }
 
-            // Save Records
+            // Build Identification Metadata
             const d = new Date();
             const dateStr = d.toISOString().split('T')[0];
             const lotId = `LOT-${dateStr.replace(/-/g,'')}-${AppState.packedLots.length + 1}`;
             const timestampStr = `${dateStr} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 
-            // Add Lot
+            // Structuring combined Payload to affect multiple sheets: PackedLots, LossLogs, and RawStock state
+            const payload = {
+                action: "createPackedLot",
+                lotId: lotId,
+                packedDate: dateStr,
+                skuCode: sku,
+                netWeight: packedWeight,
+                assetType: assetType,
+                weightLoss: loss,
+                reason: reason
+            };
+
+            // Multi-Table Transaction Pipeline to Apps Script
+            fetch(BACKEND_WEBAPP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                showToast(`⚙️ บันทึกลงตารางสำเร็จ! พิมพ์ใบแท็กสลิป 80x80 เรียบร้อย`);
+            })
+            .catch(err => console.error("Processing Connection Failure:", err));
+
+            // Commit Local State Real-time Change
             AppState.packedLots.push({
                 id: lotId,
                 date: dateStr,
@@ -659,7 +700,6 @@
                 status: "Available"
             });
 
-            // Add Loss Log if exists
             if(loss > 0) {
                 AppState.lossLogs.push({
                     timestamp: timestampStr,
@@ -669,10 +709,9 @@
                 });
             }
 
-            // Deduct Raw Stock completely
             AppState.rawStock[sku] = 0;
 
-            // Trigger Mock Printer Slip View
+            // Trigger Mock Thermal Slip UI Output
             document.getElementById('thermal-empty-state').classList.add('hidden');
             const preview = document.getElementById('thermal-tag-preview');
             preview.classList.remove('hidden');
@@ -684,9 +723,6 @@
             document.getElementById('tag-asset').innerText = assetType === 'big_bag' ? 'Big Bag (One-Way)' : 'Wood Pallet';
             document.getElementById('tag-qr-id').innerText = lotId;
 
-            showToast(`⚙️ ล็อคอินและสร้าง Lot ID: ${lotId} เรียบร้อย!`);
-            
-            // Clear Form Inputs
             document.getElementById('pack-weight').value = '';
             document.getElementById('pack-loss-reason').value = '';
             
