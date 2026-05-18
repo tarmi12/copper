@@ -28,7 +28,7 @@
                 ระบบไม่สามารถดึงข้อมูลจริงจาก Google Sheets ได้ และเราได้ถอดข้อมูลจำลองออกแล้ว เพื่อป้องกันข้อผิดพลาด กรุณาดำเนินการแก้ไขดังนี้:
             </p>
             <ul class="text-[11px] text-slate-400 list-decimal list-inside space-y-1.5 self-start font-sans">
-                <li>เปิดไฟล์ <code class="bg-slate-950 px-1 py-0.5 rounded text-rose-300">index.html</code> นำลิงก์ Web App URL มาอัปเดตในตัวแปร <code class="bg-slate-950 px-1 py-0.5 rounded text-rose-300">BACKEND_WEBAPP_URL</code> ที่บรรทัดแรกของสคริปต์</li>
+                <li>เปิดไฟล์ <code class="bg-slate-950 px-1 py-0.5 rounded text-rose-300">index.html</code> นำลิงก์ Web App  มาอัปเดตในตัวแปร <code class="bg-slate-950 px-1 py-0.5 rounded text-rose-300">BACKEND_WEBAPP_URL</code> ที่บรรทัดแรกของสคริปต์</li>
                 <li>ตรวจสอบว่าใน Google Sheets ได้กด <strong class="text-slate-200">"Deploy (ทำให้ใช้งานได้)"</strong> เป็น <strong class="text-slate-200">"Web App"</strong> และระบุสิทธิ์เป็น <strong class="text-slate-200">"Everyone (ทุกคน)"</strong> แล้ว</li>
                 <li>ลองอัปเกรด Deploy ในหน้า Apps Script ให้เป็น เวอร์ชันใหม่ (New Version) เสมอหลังแก้โค้ดหลังบ้าน</li>
             </ul>
@@ -378,7 +378,7 @@
     <script>
         // --- 1. Global EndPoint Settings & Clean Local Memory Storage ---
         // วางลิงก์ Web App URL ที่ลงท้ายด้วย /exec ตรงช่องตัวแปรนี้
-        const BACKEND_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzDq2wQF6gMaamODACcLcxEb0L-4gCulVtQVm34lui-X3vIxCoU_19lgQhfNBREdPq0zg/exec";
+        const BACKEND_WEBAPP_URL = "https://script.google.com/macros/s/AKfycby-SiwKohjSE4i1JTU4nfihr2FpNMxvcGT76HBCSuXpWBbs-NnvLDyrBUWE-SXbnDXopQ/exec";
 
         const AppState = {
             skuNames: {
